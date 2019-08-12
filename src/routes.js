@@ -4,6 +4,8 @@ const mysql = require('mysql')
 const routes = express.Router()
 const credentials = require("./app/controllers/DBController");
 
+customers = [];
+
 var connection = mysql.createConnection({
   // properties...
   host: credentials.host,
@@ -25,6 +27,7 @@ routes.get('/', (req, res) => {
 })
 
 routes.get('/test', (req, res) => {
+  
   // about mysql
   connection.query(
     `SELECT customer_id, B/A AS 'diff' from 
@@ -53,14 +56,21 @@ routes.get('/test', (req, res) => {
       if (error) {
         console.log(error)
       } else {
+
+        console.log("")
+        console.log("")
         console.log('Succesful query!')
-        console.log(rows)
-        console.log(typeof rows)
-        console.log(req.query.company)
-        // res.send(JSON.stringify({ rows }))
+        console.log("")
+        console.log(`Amount: ${rows.length}`)
+        console.log("")
+        for(let i = 0; i < rows.length; i++){
+          customers.push(rows[i].customer_id);
+        }
+        console.log("==========")
+        console.log("Customers:")
+        console.log(customers)
         res.send(rows)
-        // res.set('Content-Type', 'application/octet-stream')
-        //new ObjectsToCsv(rows).toDisk('./test.csv')
+
       }
     }
   )
